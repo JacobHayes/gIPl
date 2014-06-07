@@ -44,8 +44,8 @@ func main() {
 	fmt.Print("Location Precision - City/[Country]: ")
 
 	if precision := strings.ToLower(readLine(stdin)); precision == "city" {
-		fmt.Println(locus.CityLocation(key, ip))
+		fmt.Println(locus.LookupLocation(ip, "City", key))
 	} else {
-		fmt.Println(locus.CountryLocation(key, ip))
+		fmt.Println(locus.LookupLocation(ip, "Country", key))
 	}
 }
