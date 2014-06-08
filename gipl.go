@@ -38,14 +38,17 @@ func main() {
 	defer key_file.Close()
 	key := readLine(bufio.NewScanner(key_file))
 
-	fmt.Print("Enter an IP address to lookup: ")
-	ip := readLine(stdin)
+	ips := make([]string, 5)
+	for i := 0; i < 5; i++ {
+		fmt.Print("Enter an IP address to lookup: ")
+		ips[i] = readLine(stdin)
+	}
 
 	fmt.Print("Location Precision - City/[Country]: ")
+	locations, err := locus.BulkLookupLocation(ips, strings.ToLower(readLine(stdin)), key)
+	check(err)
 
-	if precision := strings.ToLower(readLine(stdin)); precision == "city" {
-		fmt.Println(locus.LookupLocation(ip, "City", key))
-	} else {
-		fmt.Println(locus.LookupLocation(ip, "Country", key))
+	for _, location := range locations {
+		fmt.Println(location)
 	}
 }
