@@ -24,7 +24,6 @@ func open(filename string) *os.File {
 
 func readLine(scanner *bufio.Scanner) string {
 	check(scanner.Err())
-	scanner.Scan()
 	line := scanner.Text()
 	check(scanner.Err())
 
@@ -36,12 +35,16 @@ func main() {
 
 	key_file := open(`api`)
 	defer key_file.Close()
-	key := readLine(bufio.NewScanner(key_file))
+	key_scanner := bufio.NewScanner(key_file)
+	key_scanner.Scan()
+	key := readLine(key_scanner)
 
-	ips := make([]string, 5)
-	for i := 0; i < 5; i++ {
-		fmt.Print("Enter an IP address to lookup: ")
-		ips[i] = readLine(stdin)
+	ips_file := open(`ips`)
+	defer ips_file.Close()
+	ips_scanner := bufio.NewScanner(ips_file)
+	ips := make([]string, 0)
+	for ips_scanner.Scan() {
+		ips = append(ips, readLine(ips_scanner))
 	}
 
 	fmt.Print("Location Precision - City/[Country]: ")
