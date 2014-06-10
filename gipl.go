@@ -23,6 +23,7 @@ func open(filename string) *os.File {
 }
 
 func readLine(scanner *bufio.Scanner) string {
+	scanner.Scan()
 	check(scanner.Err())
 	line := scanner.Text()
 	check(scanner.Err())
@@ -36,19 +37,10 @@ func main() {
 	key_file := open(`api`)
 	defer key_file.Close()
 	key_scanner := bufio.NewScanner(key_file)
-	key_scanner.Scan()
 	key := readLine(key_scanner)
 
-	ips_file := open(`ips`)
-	defer ips_file.Close()
-	ips_scanner := bufio.NewScanner(ips_file)
-	ips := make([]string, 0)
-	for ips_scanner.Scan() {
-		ips = append(ips, readLine(ips_scanner))
-	}
-
 	fmt.Print("Location Precision - City/[Country]: ")
-	locations, err := locus.BulkLookupLocation(ips, strings.ToLower(readLine(stdin)), key)
+	locations, err := locus.LookupLocationsFile(`ips`, strings.ToLower(readLine(stdin)), key)
 	check(err)
 
 	for _, location := range locations {
